@@ -12,24 +12,23 @@ $(document).ready(function(){
 
     //Global variables
     var db = firebase.database();
-    var rock = "Rock";
-    var paper = "Paper";
-    var scissors = "Scissors";
     var message = function(){
         return $("#playerTextInput").val().trim()
     };
-    var messageArr = [];
+    var chatRef = db.ref("/chat")
     var player1 = {
         name: "",
         wins: 0,
         losses: 0,
         exists: false,
+        pick: ""
     };
     var player2 = {
         name: "",
         wins: 0,
         losses: 0,
         exists: false,
+        pick: ""
     };
     //Firebase snapshot function
     
@@ -57,24 +56,18 @@ $(document).ready(function(){
     })
     
     $("#send").click(function(){
-        db.ref().on("value", function(snapshot){
+        // chatRef.on("value", function(snapshot){
             console.log("Message: " + message());
-            console.log("Message array: " + messageArr);
-            messageArr.push(message());
-            db.ref().set({
-                chat: messageArr
+            chatRef.push({
+                message: message(),
+                dateAdded: firebase.database.ServerValue.TIMESTAMP});
+            chatRef.on("child_added", function(snap){
+                // console.log("this is snap.child " + snap.child().val());
+                console.log(snap.val().message);
+                
             })
-            console.log("Snapshot of chat: " + snapshot.val().chat);
-            $("#chat").text(snapshot.val().chat);
-        })
+        // })
 })
-
-    $("#clearArr").click(function(){
-        console.log("messageArr: " + messageArr);
-        messageArr = [];
-        console.log("messageArr emptied: " + messageArr);
-    })
-    
     
     
 
