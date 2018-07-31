@@ -15,6 +15,8 @@ $(document).ready(function(){
     var rock = "Rock";
     var paper = "Paper";
     var scissors = "Scissors";
+    // var message = $("#playerTextInput").val().trim();
+    // var messageArr = [];
     var player1 = {
         name: "",
         wins: 0,
@@ -55,7 +57,14 @@ $(document).ready(function(){
         console.log($(this).attr("data-pick"));
     })
 
-
+    $("#send").click(function(){
+        // messageArr.push(message);
+        db.ref().set({
+            chat: $("#playerTextInput").val().trim()
+        })
+        console.log($("#playerTextInput").val().trim());
+        // console.log(messageArr);
+    })
 
 
 
