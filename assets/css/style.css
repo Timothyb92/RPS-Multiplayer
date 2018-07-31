@@ -1,6 +1,6 @@
 div {
     border: red 1px solid;
-    height: 100px;
+    /* height: 100px; */
 }
 
 #playerTextInput {
