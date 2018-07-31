@@ -56,18 +56,17 @@ $(document).ready(function(){
     })
     
     $("#send").click(function(){
-        // chatRef.on("value", function(snapshot){
-            console.log("Message: " + message());
-            chatRef.push({
-                message: message(),
-                dateAdded: firebase.database.ServerValue.TIMESTAMP});
-            chatRef.on("child_added", function(snap){
-                // console.log("this is snap.child " + snap.child().val());
-                console.log(snap.val().message);
+        chatRef.push({
+            message: message(),
+            dateAdded: firebase.database.ServerValue.TIMESTAMP});
+
                 
-            })
-        // })
-})
+    })
+
+    chatRef.orderByChild("dateAdded").limitToLast(1).on("child_added", function(snap){
+        console.log(snap.val().message);
+        $("#chat").append($("<p>").text(snap.val().message));
+    })
     
     
 
