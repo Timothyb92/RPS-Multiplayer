@@ -15,8 +15,10 @@ $(document).ready(function(){
     var rock = "Rock";
     var paper = "Paper";
     var scissors = "Scissors";
-    // var message = $("#playerTextInput").val().trim();
-    // var messageArr = [];
+    var message = function(){
+        return $("#playerTextInput").val().trim()
+    };
+    var messageArr = [];
     var player1 = {
         name: "",
         wins: 0,
@@ -30,10 +32,7 @@ $(document).ready(function(){
         exists: false,
     };
     //Firebase snapshot function
-    db.ref().on("value", function(snapshot){
-        console.log(snapshot.val());
-    })
-
+    
     //Function to assign player name entered to P1 or P2 respectively
     var getPlayerName = function(){
         var playerName = $("#playerName").val().trim();
@@ -47,30 +46,37 @@ $(document).ready(function(){
             console.log("Player 2 is " + playerName);
         }
     }
-
+    
     $("#playerNameSubmit").click(getPlayerName);
-
+    
     $(".rpsChoice").click(function(){
         db.ref().set({
             pick: $(this).attr("data-pick")
         });
         console.log($(this).attr("data-pick"));
     })
-
+    
     $("#send").click(function(){
-        // messageArr.push(message);
-        db.ref().set({
-            chat: $("#playerTextInput").val().trim()
+        db.ref().on("value", function(snapshot){
+            console.log("Message: " + message());
+            console.log("Message array: " + messageArr);
+            messageArr.push(message());
+            db.ref().set({
+                chat: messageArr
+            })
+            console.log("Snapshot of chat: " + snapshot.val().chat);
+            $("#chat").text(snapshot.val().chat);
         })
-        console.log($("#playerTextInput").val().trim());
-        // console.log(messageArr);
+})
+
+    $("#clearArr").click(function(){
+        console.log("messageArr: " + messageArr);
+        messageArr = [];
+        console.log("messageArr emptied: " + messageArr);
     })
-
-
-
-
-
-
+    
+    
+    
 
 
 
