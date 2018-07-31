@@ -16,6 +16,8 @@ $(document).ready(function(){
         return $("#playerTextInput").val().trim()
     };
     var chatRef = db.ref("/chat")
+    var playersRef = db.ref("/players");
+    var conRef = db.ref(".info/connected");
     var player1 = {
         name: "",
         wins: 0,
@@ -30,24 +32,33 @@ $(document).ready(function(){
         exists: false,
         pick: ""
     };
-    //Firebase snapshot function
-    
-    //Function to assign player name entered to P1 or P2 respectively
-    var getPlayerName = function(){
-        var playerName = $("#playerName").val().trim();
-        if (!player1.exists){
-            player1.name = playerName;
-            player1.exists = true;
-            console.log("Player 1 is " + playerName);
-        } else {
-            player2.name = playerName;
-            player2.exists = true;
-            console.log("Player 2 is " + playerName);
+
+    //Just used this function to make sure connections are working properly
+    //REMEMBER TO REMOVE THIS
+    //!_!__!__!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!!__!_!_!_!_!
+    conRef.on("value", function(snapshot){
+        if (snapshot.val()){
+            var con = playersRef.push(true);
+            con.onDisconnect().remove();
         }
-    }
+    })
+    //!_!__!__!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!!__!_!_!_!_!
     
-    $("#playerNameSubmit").click(getPlayerName);
-    
+    $("#playerNameSubmit").click(function(event){
+        event.preventDefault();
+        if (!player1.exists){
+            player1.name = ($("#playerName").val().trim());
+            player1.exists = true;
+            console.log(player1);
+            playersRef.child("player1").set({player1});
+        } else if (player1.exists === true && player2.exists === false){
+            player2.name = ($("#playerName").val().trim());
+            player2.exists = true;
+            playersRef.child("player2").set({player2});
+        }
+    })
+
+
     $(".rpsChoice").click(function(){
         db.ref().set({
             pick: $(this).attr("data-pick")
@@ -55,7 +66,9 @@ $(document).ready(function(){
         console.log($(this).attr("data-pick"));
     })
     
+    //Event listener on clicking the Send button
     $("#send").click(function(){
+        //Pushes the text in the message field to firebase with the time it was sent attached
         chatRef.push({
             message: message(),
             dateAdded: firebase.database.ServerValue.TIMESTAMP});
@@ -63,6 +76,8 @@ $(document).ready(function(){
                 
     })
 
+    //When a message is sent in the chat, its contents are pushed to firebase and the most
+    //recent message is appended on the screen
     chatRef.orderByChild("dateAdded").limitToLast(1).on("child_added", function(snap){
         console.log(snap.val().message);
         $("#chat").append($("<p>").text(snap.val().message));
