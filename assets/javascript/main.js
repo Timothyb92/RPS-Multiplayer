@@ -22,14 +22,14 @@ $(document).ready(function(){
         name: "",
         wins: 0,
         losses: 0,
-        exists: false,
+        exists: null,
         pick: ""
     };
     var player2 = {
         name: "",
         wins: 0,
         losses: 0,
-        exists: false,
+        exists: null,
         pick: ""
     };
 
@@ -49,12 +49,23 @@ $(document).ready(function(){
         if (!player1.exists){
             player1.name = ($("#playerName").val().trim());
             player1.exists = true;
-            console.log(player1);
-            playersRef.child("player1").set({player1});
-        } else if (player1.exists === true && player2.exists === false){
+            playersRef.child("player1").set({
+                name: player1.name,
+                wins: player1.wins,
+                losses: player1.losses,
+                exists: player1.exists,
+                pick: player1.pick
+            })
+        } else if (player1.exists){
             player2.name = ($("#playerName").val().trim());
             player2.exists = true;
-            playersRef.child("player2").set({player2});
+            playersRef.child("player2").set({
+                name: player2.name,
+                wins: player2.wins,
+                losses: player2.losses,
+                exists: player2.exists,
+                pick: player2.pick
+            })
         }
     })
 
