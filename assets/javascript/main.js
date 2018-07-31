@@ -8,7 +8,13 @@ $(document).ready(function(){
       };
       firebase.initializeApp(config);
 
-
+var rock;
+var paper;
+var scissors;
+var p1Wins = 0;
+var p1Losses = 0;
+var p2Wins = 0;
+var p2Losses = 0;
 
 
 
