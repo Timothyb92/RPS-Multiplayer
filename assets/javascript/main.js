@@ -17,7 +17,8 @@ $(document).ready(function(){
     };
     var chatRef = db.ref("/chat")
     var playersRef = db.ref("/players");
-    var conRef = db.ref(".info/connected");
+    var connectedRef = db.ref(".info/connected");
+    var connectionsRef = db.ref("/connections");
     var player1 = {
         name: "",
         wins: 0,
@@ -34,15 +35,12 @@ $(document).ready(function(){
     };
 
     //Just used this function to make sure connections are working properly
-    //REMEMBER TO REMOVE THIS
-    //!_!__!__!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!!__!_!_!_!_!
-    conRef.on("value", function(snapshot){
+    connectedRef.on("value", function(snapshot){
         if (snapshot.val()){
-            var con = db.ref().push(true);
+            var con = connectionsRef.push(true);
             con.onDisconnect().remove();
         }
     })
-    //!_!__!__!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!!__!_!_!_!_!
     
     $("#playerNameSubmit").click(function(event){
         event.preventDefault();
