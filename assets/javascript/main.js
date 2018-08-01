@@ -38,7 +38,7 @@ $(document).ready(function(){
     //!_!__!__!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!_!!__!_!_!_!_!
     conRef.on("value", function(snapshot){
         if (snapshot.val()){
-            var con = playersRef.push(true);
+            var con = db.ref().push(true);
             con.onDisconnect().remove();
         }
     })
@@ -67,18 +67,15 @@ $(document).ready(function(){
                 pick: player2.pick
             })
         }
+        $("#playerName").val("");
     })
 
     //Uses the information in firebase to set the boolean "exists" for p1 and p2
     playersRef.child("player1").on("value", function(snap){
         player1.exists = snap.val().exists;
-        console.log("player1.exists: " + player1.exists);
-        console.log("player2.exists: " + player2.exists);
     })
     playersRef.child("player2").on("value", function(snap){
         player2.exists = snap.val().exists;
-        console.log("player1.exists: " + player1.exists);
-        console.log("player2.exists: " + player2.exists);
     })
 
 
@@ -90,23 +87,28 @@ $(document).ready(function(){
     })
     
     //Event listener on clicking the Send button
-    $("#send").click(function(){
+    $("#send").click(function(event){
+        event.preventDefault();
         //Pushes the text in the message field to firebase with the time it was sent attached
-        chatRef.push({
-            message: message(),
-            dateAdded: firebase.database.ServerValue.TIMESTAMP});
-
-                
+        if($("#playerTextInput").val() != ""){
+            chatRef.push({
+                message: message(),
+                dateAdded: firebase.database.ServerValue.TIMESTAMP});
+        }
+        
+        $("#playerTextInput").val("");
     })
 
     //When a message is sent in the chat, its contents are pushed to firebase and the most
     //recent message is appended on the screen
-    chatRef.orderByChild("dateAdded").limitToLast(1).on("child_added", function(snap){
+    chatRef.orderByChild("dateAdded").on("child_added", function(snap){
         console.log(snap.val().message);
         $("#chat").append($("<p>").text(snap.val().message));
     })
     
-    
+    db.ref().on("value", function(snapshot){
+        console.log(snapshot.child("chat").val());
+    })
 
 
 
