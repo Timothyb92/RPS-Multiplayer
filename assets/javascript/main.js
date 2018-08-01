@@ -69,10 +69,22 @@ $(document).ready(function(){
         }
     })
 
+    //Uses the information in firebase to set the boolean "exists" for p1 and p2
+    playersRef.child("player1").on("value", function(snap){
+        player1.exists = snap.val().exists;
+        console.log("player1.exists: " + player1.exists);
+        console.log("player2.exists: " + player2.exists);
+    })
+    playersRef.child("player2").on("value", function(snap){
+        player2.exists = snap.val().exists;
+        console.log("player1.exists: " + player1.exists);
+        console.log("player2.exists: " + player2.exists);
+    })
+
 
     $(".rpsChoice").click(function(){
         db.ref().set({
-            pick: $(this).attr("data-pick")
+            // pick: $(this).attr("data-pick")
         });
         console.log($(this).attr("data-pick"));
     })
