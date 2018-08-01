@@ -19,19 +19,22 @@ $(document).ready(function(){
     var playersRef = db.ref("/players");
     var connectedRef = db.ref(".info/connected");
     var connectionsRef = db.ref("/connections");
-    var player1 = {
+    var playerNumber = 0;
+    var player = {
         name: "",
         wins: 0,
         losses: 0,
         exists: null,
-        pick: ""
+        pick: "",
+        number: 0
     };
-    var player2 = {
+    var enemy = {
         name: "",
         wins: 0,
         losses: 0,
         exists: null,
-        pick: ""
+        pick: "",
+        number: 0
     };
 
     //Just used this function to make sure connections are working properly
@@ -44,36 +47,38 @@ $(document).ready(function(){
     
     $("#playerNameSubmit").click(function(event){
         event.preventDefault();
-        if (!player1.exists){
-            player1.name = ($("#playerName").val().trim());
-            player1.exists = true;
-            playersRef.child("player1").set({
-                name: player1.name,
-                wins: player1.wins,
-                losses: player1.losses,
-                exists: player1.exists,
-                pick: player1.pick
+        if (!player.exists){
+            player.name = ($("#playerName").val().trim());
+            player.exists = true;
+            playersRef.child("player").set({
+                name: player.name,
+                wins: player.wins,
+                losses: player.losses,
+                exists: player.exists,
+                pick: player.pick,
+                number: player.number
             })
-        } else if (player1.exists){
-            player2.name = ($("#playerName").val().trim());
-            player2.exists = true;
-            playersRef.child("player2").set({
-                name: player2.name,
-                wins: player2.wins,
-                losses: player2.losses,
-                exists: player2.exists,
-                pick: player2.pick
+        } else if (player.exists){
+            enemy.name = ($("#playerName").val().trim());
+            enemy.exists = true;
+            playersRef.child("enemy").set({
+                name: enemy.name,
+                wins: enemy.wins,
+                losses: enemy.losses,
+                exists: enemy.exists,
+                pick: enemy.pick,
+                number: enemy.number
             })
         }
         $("#playerName").val("");
     })
 
     //Uses the information in firebase to set the boolean "exists" for p1 and p2
-    playersRef.child("player1").on("value", function(snap){
-        player1.exists = snap.val().exists;
+    playersRef.child("player").on("value", function(snap){
+        player.exists = snap.val().exists;
     })
-    playersRef.child("player2").on("value", function(snap){
-        player2.exists = snap.val().exists;
+    playersRef.child("enemy").on("value", function(snap){
+        enemy.exists = snap.val().exists;
     })
 
 
@@ -104,9 +109,6 @@ $(document).ready(function(){
         $("#chat").append($("<p>").text(snap.val().message));
     })
     
-    db.ref().on("value", function(snapshot){
-        console.log(snapshot.child("chat").val());
-    })
 
 
 
