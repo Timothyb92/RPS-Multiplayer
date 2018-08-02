@@ -46,6 +46,9 @@ $(document).ready(function(){
         }
     })
 
+    //Clears chat when a player disconnects
+    db.ref().child("chat").onDisconnect().remove();
+
     
     $("#playerNameSubmit").click(function(event){
         event.preventDefault();
@@ -110,10 +113,16 @@ $(document).ready(function(){
         
         $("#log").click(function(event){
             event.preventDefault();
-            console.log(playersRef.child("players").child("playerNumber"));
+            console.log(playersRef.child("players").child("playerNumber").playerNumber);
         })
+
+        // db.ref().on("value", function(snap){
+        //     console.log(snap.val().players.playerNumber.playerNumber);
+        //         });
         
-        
+        // playersRef.child("playerNumber").on("value", function(snap){
+        //     console.log(playerNumber);
+        // })
         
         
         
