@@ -50,35 +50,42 @@ $(document).ready(function(){
     $("#playerNameSubmit").click(function(event){
         event.preventDefault();
         db.ref().once("value", function(snapshot){
-            var playerData = snapshot.child("players").val();
-            console.log(playerData);
+            var playersNumChildren = snapshot.child("players").numChildren();
+            if (playersNumChildren == 0){
+                // player.name = ($("#playerName").val().trim());
+                playerNumber = 1;
+                player.number = playerNumber;
+                playersRef.child("player").set({
+                    name: ($("#playerName").val().trim()),
+                    wins: player.wins,
+                    losses: player.losses,
+                    pick: player.pick,
+                    number: player.number
+                });
+                console.log(playersNumChildren)
+            } else if (playersNumChildren == 1){
+                // enemy.name = ($("#playerName").val().trim());
+                playerNumber = 2;
+                enemy.number = playerNumber;
+                playersRef.child("enemy").set({
+                    name: ($("#playerName").val().trim()),
+                    wins: enemy.wins,
+                    losses: enemy.losses,
+                    pick: enemy.pick,
+                    number: enemy.number
+                });
+            }
+            
             
         })
         // if (playerNumber == 0){
-        //     player.name = ($("#playerName").val().trim());
         //     playerNumber++;
-        //     player.number = playerNumber;
-        //     playersRef.child("player").set({
-        //         name: player.name,
-        //         wins: player.wins,
-        //         losses: player.losses,
-        //         pick: player.pick,
-        //         number: player.number
-        //     });
         //     playersRef.child("playerNumber").set({
         //         playerNumber
         //     });
         // } else if (playerNumber == 1){
-        //     enemy.name = ($("#playerName").val().trim());
         //     playerNumber++;
         //     enemy.number = playerNumber;
-        //     playersRef.child("enemy").set({
-        //         name: enemy.name,
-        //         wins: enemy.wins,
-        //         losses: enemy.losses,
-        //         pick: enemy.pick,
-        //         number: enemy.number
-        //     });
         //     playersRef.child("playerNumber").set({
         //         playerNumber
         //     });
@@ -115,7 +122,9 @@ $(document).ready(function(){
         
         $("#log").click(function(event){
             event.preventDefault();
-            console.log(playersRef.child("players").child("playerNumber").playerNumber);
+            db.ref().on("value", function(snap){
+                console.log(snap.child("players").numChildren())
+            })
         })
 
         // db.ref().on("value", function(snap){
