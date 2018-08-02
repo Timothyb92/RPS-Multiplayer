@@ -20,20 +20,20 @@ $(document).ready(function(){
     var connectedRef = db.ref(".info/connected");
     var connectionsRef = db.ref("/connections");
     var playerNumber;
-    var player = {
-        name: "",
-        wins: 0,
-        losses: 0,
-        pick: "",
-        number: 0
-    };
-    var enemy = {
-        name: "",
-        wins: 0,
-        losses: 0,
-        pick: "",
-        number: 0
-    };
+    // var player = {
+    //     name,
+    //     wins: 0,
+    //     losses: 0,
+    //     pick: "",
+    //     number: 0
+    // };
+    // var enemy = {
+    //     name,
+    //     wins: 0,
+    //     losses: 0,
+    //     pick: "",
+    //     number: 0
+    // };
 
     //Just used this function to make sure connections are working properly
     connectedRef.on("value", function(snapshot){
@@ -52,44 +52,28 @@ $(document).ready(function(){
         db.ref().once("value", function(snapshot){
             var playersNumChildren = snapshot.child("players").numChildren();
             if (playersNumChildren == 0){
-                // player.name = ($("#playerName").val().trim());
+                var playerName = ($("#playerName").val().trim());
                 playerNumber = 1;
-                player.number = playerNumber;
                 playersRef.child("player").set({
-                    name: ($("#playerName").val().trim()),
-                    wins: player.wins,
-                    losses: player.losses,
-                    pick: player.pick,
-                    number: player.number
+                    name: playerName,
+                    wins: 0,
+                    losses: 0,
+                    pick: "",
+                    number: playerNumber
                 });
                 console.log(playersNumChildren)
             } else if (playersNumChildren == 1){
-                // enemy.name = ($("#playerName").val().trim());
+                var enemyName = ($("#playerName").val().trim());
                 playerNumber = 2;
-                enemy.number = playerNumber;
                 playersRef.child("enemy").set({
-                    name: ($("#playerName").val().trim()),
-                    wins: enemy.wins,
-                    losses: enemy.losses,
-                    pick: enemy.pick,
-                    number: enemy.number
+                    name: enemyName,
+                    wins: 0,
+                    losses: 0,
+                    pick: "",
+                    number: playerNumber
                 });
             }
-            
-            
         })
-        // if (playerNumber == 0){
-        //     playerNumber++;
-        //     playersRef.child("playerNumber").set({
-        //         playerNumber
-        //     });
-        // } else if (playerNumber == 1){
-        //     playerNumber++;
-        //     enemy.number = playerNumber;
-        //     playersRef.child("playerNumber").set({
-        //         playerNumber
-        //     });
-        // }
         $("#playerName").val("");
     })
     
@@ -122,20 +106,10 @@ $(document).ready(function(){
         
         $("#log").click(function(event){
             event.preventDefault();
-            db.ref().on("value", function(snap){
-                console.log(snap.child("players").numChildren())
-            })
+            console.log(playerNumber);
+            
         })
 
-        // db.ref().on("value", function(snap){
-        //     console.log(snap.val().players.playerNumber.playerNumber);
-        //         });
-        
-        // playersRef.child("playerNumber").on("value", function(snap){
-        //     console.log(playerNumber);
-        // })
-        
-        
         
         
 
